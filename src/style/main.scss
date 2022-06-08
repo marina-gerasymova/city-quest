@@ -1,0 +1,47 @@
+@import "vars.scss";
+@import "/src/style/login.scss";
+
+html,
+body {
+  overflow-y: auto !important;
+  margin: 0;
+  padding: 0;
+
+  -ms-user-select: none; 
+  -moz-user-select: none; 
+  -webkit-user-select: none; 
+  user-select: none;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 7px;
+}
+::-webkit-scrollbar-thumb {
+  background: #c4c4c4;
+  border-radius: 100px;
+}
+::-webkit-scrollbar-track {
+  background: 0 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+a {
+  cursor: pointer;
+}
+
+.app {
+  display: flex;
+  font-family: Avenir, Helvetica, Arial, sans-serif !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #182430;
+}
+
+div, label {
+  font-family: Avenir, Helvetica, Arial, sans-serif !important;
+}
