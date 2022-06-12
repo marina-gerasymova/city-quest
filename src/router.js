@@ -28,6 +28,11 @@ const routes = [
     path: '/login',
     name: 'login',
     component: () => import('./views/Login.vue')
+  },
+  {
+    path: '/image-upload',
+    name: 'test',
+    component: () => import('./views/ImageUpload.vue')
   }
 ]
 
