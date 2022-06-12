@@ -40,7 +40,8 @@ export default {
 
 <style lang="scss" scoped>
 .page-size {
-  margin: 40px auto;
+  margin: auto;
+  padding: 40px 0;
 }
 .button {
   width: 100%;

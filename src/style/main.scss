@@ -62,7 +62,7 @@ div, label {
 .page-size {
   @include flex-column-align-center;
   max-width: 500px;
-  min-width: 280px;
+  min-width: 310px;
   height: calc(100vh - 60px);
 
   .title {

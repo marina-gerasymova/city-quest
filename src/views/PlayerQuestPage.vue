@@ -38,7 +38,8 @@ export default {
 @import "@/style/components/player-quest-page.scss";
 
 .page-size {
-  margin: 40px auto;
+  margin: 0 auto;
+  padding: 40px 0; 
 }
 .button {
   width: 100%;
