@@ -33,6 +33,21 @@ const routes = [
     path: '/image-upload',
     name: 'test',
     component: () => import('./views/ImageUpload.vue')
+  },
+  {
+    path: '/role',
+    name: 'role',
+    component: () => import('./views/SelectingRole.vue')
+  },
+  {
+    path: '/select-quest',
+    name: 'select-quest',
+    component: () => import('./views/SelectingQuest.vue')
+  },
+  {
+    path: '/new-quest',
+    name: 'new-quest',
+    component: () => import('./views/QuestCode.vue')
   }
 ]
 

@@ -8,24 +8,26 @@
       </h1>
       <form>
         <v-text-field
+          class="cq-text-input"
           v-model="email"
-          label="E-mail"
+          label="Електронна пошта"
+          outlined
           required
         ></v-text-field>
         <v-text-field
+          class="cq-text-input"
           type="password"
           v-model="password"
-          label="Password"
+          label="Пароль"
+          outlined
           required
         ></v-text-field>
         <div class="login__button-wrap">
-          <v-btn
-            class="login__button button"
-            color="primary"
-            @click="submit"
+          <Button
+            @button-click="submit"
           >
             Увійти
-          </v-btn>
+          </Button>
         </div>
       </form>
       <span class="pt15">
@@ -41,9 +43,13 @@
 <script>
 import { getApp } from 'firebase/app';
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import Button from "@/components/Button.vue";
 
 export default {
   name: 'LoginPage',
+  components: {
+    Button
+  },
   data() {
     return {
       email: '',
@@ -60,7 +66,7 @@ export default {
       signInWithEmailAndPassword(this.auth, this.email, this.password)
         .then((userCredential) => {
           const user = userCredential.user;
-
+          this.$router.push('/role');
           console.log(user);
         })
         .catch((error) => {
@@ -68,7 +74,6 @@ export default {
           const errorMessage = error.message;
           alert(errorCode, errorMessage);
         });
-
     }
   }
 }
