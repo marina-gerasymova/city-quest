@@ -32,7 +32,17 @@ const routes = [
   {
     path: '/role',
     name: 'role',
-    component: () => import('./views/ChoosingRole.vue')
+    component: () => import('./views/SelectingRole.vue')
+  },
+  {
+    path: '/select-quest',
+    name: 'select-quest',
+    component: () => import('./views/SelectingQuest.vue')
+  },
+  {
+    path: '/new-quest',
+    name: 'new-quest',
+    component: () => import('./views/QuestCode.vue')
   }
 ]
 
