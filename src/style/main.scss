@@ -1,4 +1,4 @@
-@import "utils/color";
+@import "utils/colors";
 @import "utils/mixins";
 @import "utils/variable";
 
@@ -35,6 +35,10 @@ body {
 
 a {
   cursor: pointer;
+}
+
+.pt15 {
+  padding-top: 15px;
 }
 
 .app {

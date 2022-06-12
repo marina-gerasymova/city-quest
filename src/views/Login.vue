@@ -4,24 +4,19 @@
       <h1
         class="login__header"
       >
-        Регістрація
+        Вхід
       </h1>
       <form>
         <v-text-field
           v-model="email"
-          :error-messages="emailErrors"
           label="E-mail"
           required
-          @input="$v.email.$touch()"
-          @blur="$v.email.$touch()"
         ></v-text-field>
         <v-text-field
+          type="password"
           v-model="password"
-          :error-messages="passwordErrors"
           label="Password"
           required
-          @input="$v.email.$touch()"
-          @blur="$v.email.$touch()"
         ></v-text-field>
         <div class="login__button-wrap">
           <v-btn
@@ -33,6 +28,48 @@
           </v-btn>
         </div>
       </form>
+      <span class="pt15">
+        Немає акаунту? 
+        <router-link to="/registration" >
+          Зареєструватися
+        </router-link>
+      </span>
     </div>
   </div>
 </template>
+
+<script>
+import { getApp } from 'firebase/app';
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+
+export default {
+  name: 'LoginPage',
+  data() {
+    return {
+      email: '',
+      password: '',
+      auth: null
+    }
+  },
+  mounted() {
+    this.auth = getAuth(getApp());
+  },
+  methods: {
+    submit() {
+      console.log('submit', this.email, this.password);
+      signInWithEmailAndPassword(this.auth, this.email, this.password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+
+          console.log(user);
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          alert(errorCode, errorMessage);
+        });
+
+    }
+  }
+}
+</script>
