@@ -1,3 +1,7 @@
+@import "utils/colors";
+@import "utils/mixins";
+@import "utils/variable";
+
 @import "vars.scss";
 @import "/src/style/login.scss";
 
@@ -31,6 +35,10 @@ body {
 
 a {
   cursor: pointer;
+}
+
+.pt15 {
+  padding-top: 15px;
 }
 
 .app {
