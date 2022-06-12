@@ -1,0 +1,54 @@
+@import "../../utils/colors";
+@import "../../utils/mixins";
+@import "../../utils/variable";
+
+/*
+Template to use text-input
+
+<v-text-field
+  v-model="vModel"
+  type="text"
+  class="cq-text-input"
+  :disabled="isDisabled"
+  solo
+/>
+*/
+
+.v-input.cq-text-input {
+  min-width: 200px !important;
+  color: $color-text-white;
+  border-radius: 3px;
+  
+
+  &.v-text-field {
+    padding: 0;
+    margin-bottom: 15px;
+  
+    &--enclosed .v-text-field__details {
+      display: none !important;
+    }
+
+    & input {
+      max-height: 60px;
+      padding: 4px 0;
+      color: $color-text-white; 
+    }
+
+    .theme--light.v-label {
+      color: $color-text-white;
+    }
+  }
+
+  &.v-input--is-focused .v-input__slot{
+    background: $color-input-focus !important;
+  }
+}
+
+.theme--light.v-text-field--outlined:not(.v-input--is-focused):not(.v-input--has-state) > .v-input__control > .v-input__slot fieldset {
+  color: $color-text-white;
+}
+
+.theme--light.v-text-field--outlined:not(.v-input--is-focused):not(.v-input--has-state):not(.v-input--is-disabled) > .v-input__control > .v-input__slot:hover fieldset {
+  color: $color-text-white !important;
+  background: $color-input-focus;
+}

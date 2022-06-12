@@ -1,6 +1,7 @@
 @import "utils/colors";
 @import "utils/mixins";
 @import "utils/variable";
+@import "vendors/index.scss";
 
 @import "vars.scss";
 @import "/src/style/login.scss";
@@ -48,6 +49,7 @@ a {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #182430;
+  background: $color-app-background !important;
 }
 
 div, label {
