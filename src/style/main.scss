@@ -59,3 +59,17 @@ div, label {
 .material-symbols-outlined {
   color: #fff;
 }
+
+.page-size {
+  @include flex-column-center-center;
+  max-width: 500px;
+  min-width: 280px;
+  height: calc(100vh - 60px);
+
+  .title {
+    margin-bottom: 50px;
+    @include font-size-24px;
+    text-align: center;
+    color: $color-text-white;
+  }
+}
