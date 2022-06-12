@@ -8,30 +8,34 @@
       </h1>
       <form>
         <v-text-field
+          class="cq-text-input"
           v-model="name"
-          :counter="10"
-          label="Name"
+          label="Ім'я"
+          outlined
           required
         ></v-text-field>
         <v-text-field
+          class="cq-text-input"
           v-model="email"
-          label="E-mail"
+          label="Електронна пошта"
+          outlined
           required
         ></v-text-field>
         <v-text-field
+          class="cq-text-input"
           type="password"
           v-model="password"
-          label="Password"
+          :counter="8"
+          label="Пароль"
+          outlined
           required
         ></v-text-field>
         <div class="login__button-wrap">
-          <v-btn
-            class="login__button button"
-            color="primary"
-            @click="submit"
+          <Button
+            @button-click="submit"
           >
             Зареєструватися
-          </v-btn>
+          </Button>
         </div>
       </form>
       <span class="pt15">
@@ -48,9 +52,13 @@
 import { getApp } from 'firebase/app';
 import { getDatabase, ref, set } from "firebase/database";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import Button from "@/components/Button.vue";
 
 export default {
   name: 'RegistrationPage',
+  components: {
+    Button
+  },
   data() {
     return {
       name: '',
