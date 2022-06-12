@@ -1,4 +1,4 @@
-@import "utils/color";
+@import "utils/colors";
 @import "utils/mixins";
 @import "utils/variable";
 
@@ -48,4 +48,8 @@ a {
 
 div, label {
   font-family: Avenir, Helvetica, Arial, sans-serif !important;
+}
+
+.material-symbols-outlined {
+  color: #fff;
 }
