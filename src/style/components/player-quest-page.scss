@@ -1,0 +1,29 @@
+@import "../utils/colors";
+@import "../utils/mixins";
+@import "../utils/variable";
+
+.player-quest-page {
+  color: $color-text-white;
+
+  &__info {
+    width: 100%;
+  }
+
+  &__line {
+    @include flex-between-center;
+    @include font-size-14px;
+    margin: 5px 0;
+  }
+
+  &__teams {
+    width: 100%;  
+    margin-top: 10px;
+    @include font-size-14px;
+  }
+
+  &__team {
+    border-top: $border-white;
+    margin: 10px 0;
+    padding: 10px 0;
+  }
+}

@@ -48,6 +48,11 @@ const routes = [
     path: '/new-quest',
     name: 'new-quest',
     component: () => import('./views/QuestCode.vue')
+  },
+  {
+    path: '/player-quest-page',
+    name: 'player-quest-page',
+    component: () => import('./views/PlayerQuestPage.vue')
   }
 ]
 

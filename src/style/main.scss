@@ -46,8 +46,7 @@ a {
   display: flex;
   font-family: Avenir, Helvetica, Arial, sans-serif !important;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+  -moz-osx-font-smoothing: grayscale; 
   color: #182430;
   background: $color-app-background !important;
 }
@@ -69,6 +68,7 @@ div, label {
   .title {
     margin-bottom: 50px;
     @include font-size-24px;
+    font-weight: bold;
     text-align: center;
     color: $color-text-white;
   }

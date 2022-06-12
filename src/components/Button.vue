@@ -24,6 +24,7 @@ export default {
   color: $color-text-blue;
   @include font-size-16px;
   font-weight: bold;
+  text-align: center;
   background: $color-button-background;
   border-radius: $border;
   transition: all ease 0.3s;
