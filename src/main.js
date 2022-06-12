@@ -4,11 +4,13 @@ import App from './App.vue';
 import vuetify from './plugins/vuetify';
 
 import "./style/main.scss";
+import store from './store'
 
 Vue.config.productionTip = false
 
 new Vue({
   router,
   vuetify,
+  store,
   render: h => h(App)
 }).$mount('#app')
