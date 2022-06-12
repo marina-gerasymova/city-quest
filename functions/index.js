@@ -57,8 +57,6 @@ exports.readQuest = functions.https.onCall((data) => {
       return {
         quest: snapshot.val()
       }
-    } else {
-      console.log("No data available");
     }
   }).catch((error) => {
     console.error(error);
@@ -79,8 +77,6 @@ exports.readUserQuests = functions.https.onCall((data) => {
           return new Date(+quest.time) - Date.now() > 0;
         })
       }
-    } else {
-      console.log("No data available");
     }
   }).catch((error) => {
     console.error(error);
@@ -116,8 +112,8 @@ exports.deleteQuest = functions.https.onCall((data) => {
  */
 
 exports.createTask = functions.https.onCall((data) => {
-  const { questCode, name, task,
-    hint, time, imgDataUrl } = data;
+  const { questCode, name, description,
+    key, hint, time, imgDataUrl } = data;
 
   const db = Database.getDatabase();
   const dbRef = Database.ref(db);
@@ -133,8 +129,9 @@ exports.createTask = functions.https.onCall((data) => {
       const taskData = {
         questCode,
         name,
-        task,
+        description,
         hint,
+        key: key.toUpperCase(),
         time,
         imgUrl,
         uid: newTaskKey,
@@ -150,20 +147,35 @@ exports.createTask = functions.https.onCall((data) => {
 });
 
 exports.readTask = functions.https.onCall((data) => {
-  const { questCode, index } = data;
+  const { questCode, taskUid } = data;
 
   const db = Database.getDatabase();
   const dbRef = Database.ref(db);
 
   return Database.get(Database.child(dbRef, `tasks/${questCode}`)).then((snapshot) => {
     if (snapshot.exists()) {
-      const tasks = Object.values(snapshot.val()); // [ { createdAt: '' } ]
-      const sortedTasks = tasks.sort((a, b) => a.createdAt - b.createdAt);
+      const tasks = snapshot.val();
       return {
-        task: sortedTasks[index]
+        task: tasks[taskUid]
       }
-    } else {
-      console.log("No data available");
+    }
+  }).catch((error) => {
+    console.error(error);
+  });
+});
+
+exports.readAllTasksId = functions.https.onCall((data) => {
+  const { questCode } = data;
+
+  const db = Database.getDatabase();
+  const dbRef = Database.ref(db);
+
+  return Database.get(Database.child(dbRef, `quests/${questCode}/tasks`)).then((snapshot) => {
+    if (snapshot.exists()) {
+      const tasks = snapshot.val();
+      return {
+        tasks
+      }
     }
   }).catch((error) => {
     console.error(error);
@@ -182,8 +194,6 @@ exports.readQuestTasks = functions.https.onCall((data) => {
       return {
         tasks
       }
-    } else {
-      console.log("No data available");
     }
   }).catch((error) => {
     console.error(error);
@@ -227,4 +237,174 @@ exports.deleteTask = functions.https.onCall((data) => {
   updates[`tasks/${questCode}/${uid}`] = null;
 
   return Database.update(dbRef, updates);
+});
+
+/**
+ * TEAMS LOGIC
+ */
+
+exports.createTeam = functions.https.onCall((data) => {
+  const { userId, questCode, name } = data;
+
+  const db = Database.getDatabase();
+  const dbRef = Database.ref(db);
+  const newTeamKey = Database.push(Database.child(dbRef, "teams")).key;
+
+  const teamData = {
+    questCode,
+    name,
+    uid: newTeamKey,
+    currentTask: "",
+    players: [ userId ],
+    createdAt: Date.now()
+  }
+
+  const updates = {};
+  updates[`teams/${questCode}/${newTeamKey}`] = teamData;
+  updates[`quests/${questCode}/teams/${newTeamKey}`] = teamData.createdAt;
+
+  return Database.update(dbRef, updates);
+});
+
+exports.readQuestTeams = functions.https.onCall((data) => {
+  const { questCode } = data;
+
+  const db = Database.getDatabase();
+  const dbRef = Database.ref(db);
+
+  return Database.get(Database.child(dbRef, `teams/${questCode}`)).then((snapshot) => {
+    if (snapshot.exists()) {
+      const teams = Object.values(snapshot.val());
+
+      const parsedTeams = teams.map(team => {
+        return {
+          ...team,
+          players: team.players.map(async (playerId) => {
+            return await Database.get(Database.child(dbRef, `users/${playerId}`)).then(data => data.val().name);
+          })
+        };
+      });
+
+      return {
+        teams: parsedTeams
+      };
+    }
+  }).catch((error) => {
+    console.error(error);
+  });
+});
+
+exports.getTeamInfo = functions.https.onCall((data) => {
+  const { teamUid, questCode } = data;
+
+  const db = Database.getDatabase();
+  const dbRef = Database.ref(db);
+
+  return Database.get(Database.child(dbRef, `teams/${questCode}/${teamUid}`))
+    .then((snapshot) => {
+      if (snapshot.exists()) {
+        const team = snapshot.val();
+        const players = team.players.map(async (playerId) => {
+          return await Database.get(Database.child(dbRef, `users/${playerId}`))
+            .then((shot) => {
+              if (shot.exists()) {
+                return {
+                  name: shot.val().name
+                }
+              }
+            })
+        });
+        return {
+          ...team,
+          players
+        };
+      }
+    }).catch((error) => {
+      console.error(error);
+    });
+});
+
+exports.joinTeam = functions.https.onCall((data) => {
+  const { teamUid, questCode, userUid } = data;
+
+  const db = Database.getDatabase();
+  const dbRef = Database.ref(db);
+
+  return Database.get(Database.child(dbRef, `teams/${questCode}/${teamUid}/players`))
+    .then((snapshot) => {
+      if (snapshot.exists()) {
+        return snapshot.val();
+      }
+    })
+    .then((playersArray) => {
+      playersArray.push(userUid);
+
+      const updates = {};
+      updates[`teams/${questCode}/${teamUid}/players`] = playersArray;
+
+      return Database.update(dbRef, updates);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+});
+
+exports.leaveTeam = functions.https.onCall((data) => {
+  const { teamUid, questCode, userUid } = data;
+
+  const db = Database.getDatabase();
+  const dbRef = Database.ref(db);
+
+  return Database.get(Database.child(dbRef, `teams/${questCode}/${teamUid}/players`))
+    .then((snapshot) => {
+      if (snapshot.exists()) {
+        return snapshot.val();
+      }
+    })
+    .then((playersArray) => {
+      playersArray.filter(uid => uid !== userUid);
+
+      const updates = {};
+      updates[`teams/${questCode}/${teamUid}/players`] = playersArray;
+
+      return Database.update(dbRef, updates);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+});
+
+exports.nextTaskTeam = functions.https.onCall((data) => {
+  const { questCode, teamUid, nextTaskId } = data;
+
+  const db = Database.getDatabase();
+  const dbRef = Database.ref(db);
+  
+  const updates = {};
+  updates[`teams/${questCode}/${teamUid}/currentTask`] = nextTaskId;
+
+  return Database.update(dbRef, updates);
+});
+
+/**
+ * QUEST COMPLETING CALLS
+ */
+
+exports.submitTask = functions.https.onCall((data) => {
+  const { questCode, taskUid, key } = data;
+
+  const db = Database.getDatabase();
+  const dbRef = Database.ref(db);
+
+  return Database.get(Database.child(dbRef, `tasks/${questCode}/${taskUid}/key`)).then((snapshot) => {
+    if (snapshot.exists()) {
+      const taskKey = snapshot.val();
+
+      return {
+        next: taskKey === key
+      }
+    }
+  }).catch((error) => {
+    console.error(error);
+  });
 });
