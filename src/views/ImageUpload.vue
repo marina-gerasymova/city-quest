@@ -11,6 +11,7 @@
 </template>
 
 <script>
+/* eslint-disable no-unreachable */
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { getApp } from 'firebase/app';
 
@@ -19,7 +20,9 @@ export default {
   data() {
     return {
       image: null,
-      imageUrl: ''
+      imageUrl: '',
+      getImageUrl: httpsCallable(getFunctions(getApp()), 'getTaskImageUrl'),
+      uploadTaskImage: httpsCallable(getFunctions(getApp()), 'uploadTaskImage'),
     }
   },
   methods: {
@@ -28,11 +31,31 @@ export default {
       if (!files.length)
         return;
       console.log(files[0]);
+      this.createImage(files[0]);
+    },
+    createImage(file) {
+      const reader = new FileReader();
+      const vm = this;
 
-      const functions = getFunctions(getApp());
-      const getImageUrl = httpsCallable(functions, 'getImageUrl');
+      reader.onload = (e) => {
+        const image = e.target.result;
+        console.log(image.toString());
 
-      getImageUrl({
+        vm.uploadImage(image.toString());
+      };
+      reader.readAsDataURL(file);
+    },
+    async uploadImage(dataUrl) {
+      await this.uploadTaskImage({
+        questId: 'quest-id',
+        taskId: 'task-id',
+        dataUrl
+      });
+
+      this.getImage();
+    },
+    getImage() {
+      this.getImageUrl({
         questId: 'quest-id',
         taskId: 'task-id'
       })
@@ -41,7 +64,7 @@ export default {
           console.log('res', data);
           this.imageUrl = data.imageUrl;
         })
-    },
+    }
   }
 }
 </script>

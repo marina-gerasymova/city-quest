@@ -1,6 +1,6 @@
 const functions = require("firebase-functions");
 const { initializeApp } = require("firebase/app");
-const { getStorage, ref, getDownloadURL } = require("firebase/storage");
+const { getStorage, ref, getDownloadURL, uploadString } = require("firebase/storage");
 
 const firebaseConfig = {
   apiKey: "AIzaSyD3LSsh8N9u2hzjrccwCchVVjPyvnJe0Ag",
@@ -23,7 +23,7 @@ exports.helloWorld = functions.https.onRequest((request, response) => {
   response.send("Hello from Firebase, deployed with GH Actions!");
 });
 
-exports.getImageUrl = functions.https.onCall((data) => {
+exports.getTaskImageUrl = functions.https.onCall((data) => {
   const { questId, taskId } = data;
 
   const storage = getStorage(firebaseApp);
@@ -38,4 +38,15 @@ exports.getImageUrl = functions.https.onCall((data) => {
         imageUrl
       };
     });
+});
+
+exports.uploadTaskImage = functions.https.onCall((data) => {
+  const { questId, taskId, dataUrl } = data;
+
+  const storage = getStorage(firebaseApp);
+  const storageRef = ref(storage, `${questId}/${taskId}/img.jpg`);
+
+  return uploadString(storageRef, dataUrl, "data_url").then(() => {
+    console.log("Uploaded a data_url string!");
+  });
 });
