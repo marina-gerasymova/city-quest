@@ -39,6 +39,10 @@ Template to use text-input
     }
   }
 
+  &.v-text-field--outlined > .v-input__control > .v-input__slot {
+    min-height: 40px;
+  }
+
   &.v-input--is-focused .v-input__slot{
     background: $color-input-focus !important;
   }
@@ -51,4 +55,12 @@ Template to use text-input
 .theme--light.v-text-field--outlined:not(.v-input--is-focused):not(.v-input--has-state):not(.v-input--is-disabled) > .v-input__control > .v-input__slot:hover fieldset {
   color: $color-text-white !important;
   background: $color-input-focus;
+}
+
+.v-text-field--outlined .v-label {
+  top: 11px !important;
+
+  &--active {
+    transform: translateY(-18px) scale(0.75); 
+  }
 }

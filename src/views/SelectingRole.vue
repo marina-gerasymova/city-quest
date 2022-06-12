@@ -2,10 +2,16 @@
   <div class="page-size">
     <div class="title">Хто ти в цій грі?</div>
     <div class="button-wrapper">
-      <Button class="button">
+      <Button 
+        class="button"
+        @button-click="selectPlayer"
+      >
         Учасник
       </Button>
-      <Button class="button">
+      <Button
+        class="button"
+        @button-click="selectOrganizator"
+      >
         Організатор
       </Button>
     </div>
@@ -16,15 +22,26 @@
 import Button from "@/components/Button.vue";
 
 export default {
-  name: 'LoginPage',
+  name: 'SelectingPole',
   components: {
     Button
   },
+  methods: {
+    selectPlayer() {
+      this.$router.push('/select-quest');
+    },
+    selectOrganizator() {
+      
+    }
+  }
 }
 </script>
 
 <style lang="scss" scoped>
+@import "@/style/utils/mixins";
+
 .page-size {
+  @include flex-column-center-center;
   margin: 0 auto;
 }
 .button {

@@ -1,0 +1,49 @@
+@import "../utils/colors";
+@import "../utils/mixins";
+@import "../utils/variable";
+
+.quest-info {
+  @include flex-between-center;
+  min-width: 300px;
+  max-width: 400px;
+  background-color: $color-text-white;
+  border-radius: $border-radius;
+
+  &__content {
+    padding: 20px 20px;
+  }
+
+  &__line {
+    @include flex-align-center;
+    margin-bottom: 5px;
+  }
+
+  &__title {
+    @include font-size-16px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: $color-purple;
+  }
+
+  &__name, &__value {
+    @include font-size-14px;
+  }
+
+  &__name {
+    margin-right: 5px;
+  }
+
+  &__arrow {
+    display: block;
+  }
+
+  &__arrow-wrap {
+    @include flex-center-center;
+    width: 45px;
+    height: 100%;
+    background: $color-purple;
+    border-top-right-radius: $border-radius;
+    border-bottom-right-radius: $border-radius;
+    cursor: pointer;
+  }
+}
