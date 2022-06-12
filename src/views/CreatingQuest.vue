@@ -2,13 +2,46 @@
   <div class="creating-quest page-size">
     <div
       class="creating-quest__form"
-      v-for="(label, index) in labels"
-      :key="index"
     >
       <v-text-field
         class="cq-text-input"
-        v-model="email"
-        :label="label"
+        v-model="name"
+        label="Назва квесту"
+        outlined
+        required
+      ></v-text-field>
+      <v-text-field
+        class="cq-text-input"
+        v-model="maxCountOfTeams"
+        label="Максимальна кількість команд"
+        outlined
+        required
+      ></v-text-field>
+      <v-text-field
+        class="cq-text-input"
+        v-model="maxCountOfMembers"
+        label="Максимальна кількість учасників в одній команді"
+        outlined
+        required
+      ></v-text-field>
+      <v-text-field
+        class="cq-text-input"
+        v-model="location"
+        label="Місто старту"
+        outlined
+        required
+      ></v-text-field>
+      <v-text-field
+        class="cq-text-input"
+        v-model="time"
+        label="Час старту"
+        outlined
+        required
+      ></v-text-field>
+      <v-text-field
+        class="cq-text-input"
+        v-model="cost"
+        label="Вартість"
         outlined
         required
       ></v-text-field>
@@ -31,7 +64,12 @@ export default {
   },
   data() {
     return {
-      labels: ['Назва квесту', 'Максимальна кількість команд', 'Максимальна кількість учасників в одній команді', 'Місто старту', 'Час старту', 'Вартість']
+      name: '',
+      time: '',
+      cost: '',
+      location: '',
+      maxCountOfMembers: '',
+      maxCountOfTeams: '',
     }
   }
 }
