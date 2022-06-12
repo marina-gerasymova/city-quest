@@ -78,7 +78,8 @@ export default {
           const user = userCredential.user;
 
           this.writeUserData(user.uid, this.name, this.email);
-
+          this.$router.push('/role');
+          
           console.log(user);
         })
         .catch((error) => {

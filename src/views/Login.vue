@@ -66,7 +66,7 @@ export default {
       signInWithEmailAndPassword(this.auth, this.email, this.password)
         .then((userCredential) => {
           const user = userCredential.user;
-
+          this.$router.push('/role');
           console.log(user);
         })
         .catch((error) => {
@@ -74,7 +74,6 @@ export default {
           const errorMessage = error.message;
           alert(errorCode, errorMessage);
         });
-
     }
   }
 }
