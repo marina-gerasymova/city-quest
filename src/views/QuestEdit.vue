@@ -48,7 +48,7 @@
     <div class="button-wrapper">
       <Button
         :disabled="!isValidForm"
-        @button-click="createQuest"
+        @button-click="updateQuest"
       >
         Зберегти
       </Button>
@@ -58,13 +58,12 @@
 
 <script>
 import Button from "@/components/Button.vue";
-import gen from 'uid-generator';
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { getApp } from 'firebase/app';
 import { mapGetters } from "vuex";
 
 export default {
-  name: 'CreatingQuest',
+  name: 'QuestEdit',
   components: {
     Button
   },
@@ -76,12 +75,14 @@ export default {
       location: '',
       maxCountOfMembers: '',
       maxCountOfTeams: '',
-      faasCreateQuest: httpsCallable(getFunctions(getApp()), 'createQuest'),
+      readQuest: httpsCallable(getFunctions(getApp()), 'readQuest'),
+      faasUpdateQuest: httpsCallable(getFunctions(getApp()), 'updateQuest'),
     }
   },
   computed: {
     ...mapGetters({
-      hostUid: 'user/userUid'
+      activeQuest: 'quest/activeQuest',
+      hostId: 'user/userUid'
     }),
     isValidForm() {
       return this.name && this.time && this.cost &&
@@ -89,27 +90,33 @@ export default {
         this.location;
     }
   },
+  async mounted() {
+    const questData = await this.readQuest({ questCode: this.$route.params.code });
+    this.$store.dispatch('quest/setActiveQuest', questData.data.quest);
+    this.name = this.activeQuest.name;
+    this.time = this.activeQuest.time;
+    this.cost = this.activeQuest.cost;
+    this.location = this.activeQuest.address;
+    this.maxCountOfMembers = this.activeQuest.teamCap,
+    this.maxCountOfTeams = this.activeQuest.teamsNum
+  },
   methods: {
-    async createQuest() {
-      const generator = new gen(40);
-      const questCode = await generator.generate();
-
+    async updateQuest() {
       const payload = {
-        creatorId: this.hostUid,
+        code: this.activeQuest.code,
+        uid: this.hostId,
         name: this.name,
         teamsNum: this.maxCountOfTeams,
         teamCap: this.maxCountOfMembers,
         address: this.location,
         time: +new Date(this.time),
         cost: this.cost,
-        questCode: questCode.toUpperCase()
+        teams: this.activeQuest.teams,
+        tasks: this.activeQuest.tasks
       }
+      await this.faasUpdateQuest(payload);
 
-      this.$store.dispatch('quest/setActiveQuest', payload);
-
-      await this.faasCreateQuest(payload);
-
-      this.$router.push(`/quest-org-info/${questCode.toUpperCase()}`);
+      this.$router.push(`/quest-org-info/${this.$route.params.code}`);
     }
   }
 }

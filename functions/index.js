@@ -222,14 +222,19 @@ exports.updateTask = functions.https.onCall((data) => {
     })
     .then((imgUrl) => {
       const updates = {};
-      updates[`tasks/${questCode}/${uid}`] = { ...data, imgUrl };
+      Object.keys(data).forEach(key => {
+        updates[`tasks/${questCode}/${uid}/${key}`] = data[key];
+      })
+      updates[`tasks/${questCode}/${uid}/imgUrl`] = imgUrl;
 
       return Database.update(dbRef, updates);
     });
   }
 
   const updates = {};
-  updates[`tasks/${questCode}/${uid}`] = { ...data };
+  Object.keys(data).forEach(key => {
+    updates[`tasks/${questCode}/${uid}/${key}`] = data[key];
+  })
 
   return Database.update(dbRef, updates);
 });

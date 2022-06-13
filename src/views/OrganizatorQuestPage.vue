@@ -2,7 +2,7 @@
   <div v-if="quest" class="quest-full-info page-size">
     <div class="quest-full-info__title">
       <div>{{ quest.name }}</div>
-      <div>
+      <div @click="editQuest">
         <span class="material-symbols-outlined">
           settings
         </span>
@@ -59,6 +59,7 @@ import Task from '@/components/Task.vue';
 import Button from "@/components/Button.vue";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { getApp } from 'firebase/app';
+import { formatTime } from '@/helpers/questTimer';
 
 export default {
   name: "OrganizatorQuestPage",
@@ -103,15 +104,7 @@ export default {
   },
   computed: {
     questTimer() {
-      var delta = this.questCountDown / 1000;
-      var days = Math.floor(delta / 86400);
-      delta -= days * 86400;
-      var hours = Math.floor(delta / 3600) % 24;
-      delta -= hours * 3600;
-      var minutes = Math.floor(delta / 60) % 60;
-      delta -= minutes * 60;
-      var seconds = Math.floor(delta % 60);
-      return `${days} днів ${hours} години ${minutes} хв. ${seconds} с.`;
+      return formatTime(this.questCountDown);
     },
     questPlayersNum() {
       const teams = this.quest.teams;
@@ -142,6 +135,9 @@ export default {
   methods: {
     createNewTask() {
       this.$router.push(`/creating-task/${this.quest.code}`);
+    },
+    editQuest() {
+      this.$router.push(`/quest-edit/${this.quest.code}`);
     }
   }
 }

@@ -68,10 +68,22 @@ const routes = [
     component: () => import('./views/OrganizatorQuestPage.vue')
   },
   {
+    path: '/quest-edit/:code',
+    name: 'quest-edit',
+    meta: { auth: true },
+    component: () => import('./views/QuestEdit.vue')
+  },
+  {
     path: '/creating-task/:code',
     name: 'creating-task',
     meta: { auth: true },
     component: () => import('./views/CreatingTask.vue')
+  },
+  {
+    path: '/task-edit/:code/:taskId',
+    name: 'task-edit',
+    meta: { auth: true },
+    component: () => import('./views/TaskEdit.vue')
   },
   {
     path: '/game',
