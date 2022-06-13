@@ -92,10 +92,12 @@ export default {
     writeUserData(userId, name, email) {
       const db = getDatabase();
       set(ref(db, 'users/' + userId), {
-        username: name,
+        name: name,
         email: email,
         userId
       });
+
+      this.$store.dispatch('user/setUserUid', userId);
     }
   }
 }

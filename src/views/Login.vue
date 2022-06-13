@@ -66,6 +66,7 @@ export default {
       signInWithEmailAndPassword(this.auth, this.email, this.password)
         .then((userCredential) => {
           const user = userCredential.user;
+          this.$store.dispatch('user/setUserUid', user.uid);
           this.$router.push('/role');
           console.log(user);
         })

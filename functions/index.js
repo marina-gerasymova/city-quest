@@ -30,11 +30,14 @@ exports.helloWorld = functions.https.onRequest((request, response) => {
 
 exports.createQuest = functions.https.onCall((data) => {
   const { questCode, name, teamsNum,
-    teamCap, address, time, cost } = data;
+    teamCap, address, time, cost, creatorId } = data;
 
     const db = Database.getDatabase();
-    return Database.set(Database.ref(db, `quests/${questCode}`), {
+    const dbRef = Database.ref(db);
+    const updates = {};
+    const questData = {
       code: questCode,
+      creatorId,
       name,
       teamsNum,
       teamCap,
@@ -43,7 +46,11 @@ exports.createQuest = functions.https.onCall((data) => {
       cost,
       tasks: [],
       teams: []
-    });
+    };
+    updates[`quests/${questCode}`] = questData;
+    updates[`users/${creatorId}/quests/${questCode}`] = questData;
+    
+    return Database.update(dbRef, updates);
 });
 
 exports.readQuest = functions.https.onCall((data) => {
@@ -71,12 +78,10 @@ exports.readUserQuests = functions.https.onCall((data) => {
 
   return Database.get(Database.child(dbRef, `users/${uid}/quests`)).then((snapshot) => {
     if (snapshot.exists()) {
-      const quests = snapshot.val();
+      const quests = Object.values(snapshot.val());
       return {
-        quests: quests.filter(quest => {
-          return new Date(+quest.time) - Date.now() > 0;
-        })
-      }
+        quests
+      };
     }
   }).catch((error) => {
     console.error(error);
@@ -84,14 +89,15 @@ exports.readUserQuests = functions.https.onCall((data) => {
 });
 
 exports.updateQuest = functions.https.onCall((data) => {
-  const { code } = data;
+  const { code, uid } = data;
 
   const db = Database.getDatabase();
   const dbRef = Database.ref(db);
 
   const updates = {};
   updates[`quests/${code}`] = { ...data };
-  
+  updates[`users/${uid}/quests/${code}`] = { ...data };
+
   return Database.update(dbRef, updates);
 });
 
