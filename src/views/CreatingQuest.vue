@@ -1,8 +1,6 @@
 <template>
   <div class="creating-quest page-size">
-    <div
-      class="creating-quest__form"
-    >
+    <div class="creating-quest__form">
       <v-text-field
         class="cq-text-input"
         v-model="name"
@@ -117,7 +115,8 @@ export default {
 
 <style lang="scss" scoped>
 .page-size {
-  margin: 40px auto;
+  margin: 0 auto;
+  padding: 40px 0;
 }
 
 .button {

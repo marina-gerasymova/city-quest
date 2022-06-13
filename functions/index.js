@@ -264,6 +264,7 @@ exports.deleteTask = functions.https.onCall((data) => {
 
   const updates = {};
   updates[`tasks/${questCode}/${uid}`] = null;
+  updates[`quests/${questCode}/tasks/${uid}`] = null;
 
   return Database.update(dbRef, updates);
 });

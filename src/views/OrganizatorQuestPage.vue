@@ -41,6 +41,7 @@
           v-for="task in questTasks"
           :key="task.uid"
           :task="task"
+          @delete-task="deleteTask(task.uid)"
         />
       </div>
       <div class="button-wrapper">
@@ -52,11 +53,15 @@
       </div>
     </div>
   </div>
+  <div v-else class="page-size">
+    <Loader />
+  </div>
 </template>
 
 <script>
 import Task from '@/components/Task.vue';
 import Button from "@/components/Button.vue";
+import Loader from "@/components/Loader.vue";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { getApp } from 'firebase/app';
 import { formatTime } from '@/helpers/questTimer';
@@ -65,10 +70,12 @@ export default {
   name: "OrganizatorQuestPage",
   components: {
     Task,
-    Button
+    Button,
+    Loader
   },
   data() {
     return {
+      faasDeleteTask: httpsCallable(getFunctions(getApp()), 'deleteTask'),
       info: [
         {
           label: 'До початку залишилось:',
@@ -138,6 +145,17 @@ export default {
     },
     editQuest() {
       this.$router.push(`/quest-edit/${this.quest.code}`);
+    },
+    async deleteTask(uid) {
+      const questCode = this.$route.params.code;
+
+      await this.faasDeleteTask({
+        uid,
+        questCode
+      });
+
+      const questTasks = await this.readQuestTasks({ questCode });
+      this.questTasks = questTasks.data.tasks;
     }
   }
 }

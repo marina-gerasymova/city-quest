@@ -4,8 +4,7 @@
 
 .quest-info {
   @include flex-between-center;
-  min-width: 300px;
-  max-width: 400px;
+  width: 100%;
   margin-bottom: 20px;
   background-color: $color-text-white;
   border-radius: $border-radius;
