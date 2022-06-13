@@ -1,7 +1,8 @@
 <template #button>
   <div
     class="button"
-    @click="$emit('button-click')"
+    :class="{ 'button--disabled': disabled }"
+    @click="!disabled && $emit('button-click')"
   >
     <slot />
   </div>
@@ -10,6 +11,9 @@
 <script>
 export default {
   name: 'Button',
+  props: {
+    disabled: Boolean
+  }
 };
 </script>
 
@@ -29,6 +33,11 @@ export default {
   border-radius: $border;
   transition: all ease 0.3s;
   cursor: pointer;
+
+  &--disabled {
+    pointer-events: none;
+    opacity: 0.7;
+  }
 
   &:hover {
     background: $color-button-hover;

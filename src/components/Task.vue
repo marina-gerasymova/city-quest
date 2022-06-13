@@ -12,7 +12,7 @@
         }"
       >
         <span class="material-symbols-outlined">
-          chevron_left
+          chevron_right
         </span>
       </div>
     </div>

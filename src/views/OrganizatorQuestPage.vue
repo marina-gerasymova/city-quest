@@ -1,7 +1,7 @@
 <template>
-  <div class="quest-full-info page-size">
+  <div v-if="quest" class="quest-full-info page-size">
     <div class="quest-full-info__title">
-      <div>name</div>
+      <div>{{ quest.name }}</div>
       <div>
         <span class="material-symbols-outlined">
           settings
@@ -9,18 +9,40 @@
       </div>
     </div>
     <div class="quest-full-info__content">
-      <div
-        class="quest-full-info__line"
-        v-for="row in info"
-        :key="row.label"
-      >
-        <div class="quest-full-info__label">{{ row.label }}</div>
-        <div class="quest-full-info__value">{{ row.value }}</div>
+      <div class="quest-full-info__line">
+        <div class="quest-full-info__label">{{ info[0].label }}</div>
+        <div class="quest-full-info__value">{{ questTimer }}</div>
+      </div>
+      <div class="quest-full-info__line">
+        <div class="quest-full-info__label">{{ info[1].label }}</div>
+        <div class="quest-full-info__value">{{ quest.teamsNum }}</div>
+      </div>
+      <div class="quest-full-info__line">
+        <div class="quest-full-info__label">{{ info[2].label }}</div>
+        <div class="quest-full-info__value">{{ questPlayersNum }}/{{ quest.teamCap * quest.teamsNum }}</div>
+      </div>
+      <div class="quest-full-info__line">
+        <div class="quest-full-info__label">{{ info[3].label }}</div>
+        <div class="quest-full-info__value">{{ quest.address }}</div>
+      </div>
+      <div class="quest-full-info__line">
+        <div class="quest-full-info__label">{{ info[4].label }}</div>
+        <div class="quest-full-info__value">{{ quest.cost }}</div>
+      </div>
+      <div class="quest-full-info__line">
+        <div class="quest-full-info__label">{{ info[5].label }}</div>
+        <div class="quest-full-info__value">{{ quest.code }}</div>
       </div>
     </div>
     <div class="quest-full-info__tasks">
       <div class="quest-full-info__label">Завдання:</div>
-      <Task />
+      <div v-if="quest.tasks" class="quest-full-info__tasks-list">
+        <Task
+          v-for="task in quest.tasks"
+          :key="task.uid"
+          :task="task"
+        />
+      </div>
       <div class="button-wrapper">
         <Button
           @button-click="createNewTask"
@@ -35,6 +57,8 @@
 <script>
 import Task from '@/components/Task.vue';
 import Button from "@/components/Button.vue";
+import { getFunctions, httpsCallable } from "firebase/functions";
+import { getApp } from 'firebase/app';
 
 export default {
   name: "OrganizatorQuestPage",
@@ -58,7 +82,7 @@ export default {
           value: '',
         },
         {
-          label: 'Місто старту:',
+          label: 'Локація старту:',
           value: '',
         },
         {
@@ -69,12 +93,51 @@ export default {
           label: 'Код квесту:',
           value: '',
         }
-      ]
+      ],
+      quest: null,
+      questCountDown: 0,
+      readQuest: httpsCallable(getFunctions(getApp()), 'readQuest'),
     }
+  },
+  computed: {
+    questTimer() {
+      var delta = this.questCountDown / 1000;
+      var days = Math.floor(delta / 86400);
+      delta -= days * 86400;
+      var hours = Math.floor(delta / 3600) % 24;
+      delta -= hours * 3600;
+      var minutes = Math.floor(delta / 60) % 60;
+      delta -= minutes * 60;
+      var seconds = Math.floor(delta % 60);
+      return `${days}:${hours}:${minutes}:${seconds}`;
+    },
+    questPlayersNum() {
+      const teams = this.quest.teams;
+
+      if (!teams) {
+        return 0;
+      }
+
+      return teams.reduce((acc, team) => {
+        return acc + (team.players?.length || 0)
+      }, 0)
+    }
+  },
+  async mounted() {
+    const questCode = this.$route.params.code
+    const result = await this.readQuest({ questCode });
+    this.quest = result.data.quest;
+    this.questCountDown = new Date(+this.quest.time) - Date.now();
+
+    setInterval(() => {
+      if (this.questCountDown > 0) {
+        this.questCountDown -= 1000;
+      }
+    }, 1000)
   },
   methods: {
     createNewTask() {
-      this.$router.push('/creating-task');
+      this.$router.push(`/creating-task/${this.quest.code}`);
     }
   }
 }

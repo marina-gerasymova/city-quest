@@ -28,10 +28,12 @@ export default {
   },
   methods: {
     selectPlayer() {
+      this.$store.dispatch('user/setUserRole', 'player');
       this.$router.push('/select-quest');
     },
     selectOrganizator() {
-      
+      this.$store.dispatch('user/setUserRole', 'host');
+      this.$router.push('/select-quest-org')
     }
   }
 }
