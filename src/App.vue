@@ -1,19 +1,20 @@
 <template>
-  <v-app>
+  <v-app class="app">
     <router-view />
   </v-app>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+import { getStorage } from "firebase/storage";
+import { getApp } from 'firebase/app';
 
-#nav {
-  padding: 30px;
+export default {
+  name: 'App',
+  mounted() {
+    const app = getApp();
+    const storage = getStorage(app);
+
+    console.log(app, storage);
+  }
 }
-</style>
+</script>

@@ -1,3 +1,8 @@
+@import "utils/colors";
+@import "utils/mixins";
+@import "utils/variable";
+@import "vendors/index.scss";
+
 @import "vars.scss";
 @import "/src/style/login.scss";
 
@@ -33,15 +38,44 @@ a {
   cursor: pointer;
 }
 
+.pt15 {
+  padding-top: 15px;
+}
+
 .app {
   display: flex;
   font-family: Avenir, Helvetica, Arial, sans-serif !important;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+  -moz-osx-font-smoothing: grayscale; 
   color: #182430;
+  background: $color-app-background !important;
 }
 
 div, label {
   font-family: Avenir, Helvetica, Arial, sans-serif !important;
+}
+
+.material-symbols-outlined {
+  color: #fff;
+}
+
+.task {
+  .material-symbols-outlined {
+    color: #222;
+  }
+}
+
+.page-size {
+  @include flex-column-align-center;
+  max-width: 500px;
+  min-width: 310px;
+  height: calc(100vh - 60px);
+
+  .title {
+    margin-bottom: 50px;
+    @include font-size-24px;
+    font-weight: bold;
+    text-align: center;
+    color: $color-text-white;
+  }
 }
