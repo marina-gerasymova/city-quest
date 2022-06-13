@@ -58,6 +58,16 @@ const routes = [
     path: '/creating-quest',
     name: 'creating-quest',
     component: () => import('./views/CreatingQuest.vue')
+  },
+  {
+    path: '/quest-full-info',
+    name: 'quest-full-info',
+    component: () => import('./views/OrganizatorQuestPage.vue')
+  },
+  {
+    path: '/creating-task',
+    name: 'creating-task',
+    component: () => import('./views/CreatingTask.vue')
   }
 ]
 
