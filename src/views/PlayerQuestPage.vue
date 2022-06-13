@@ -1,6 +1,7 @@
 <template>
   <div v-if="quest" class="page-size player-quest-page">
     <div class="player-quest-page__title title">
+      <div>{{ quest.name }}</div>
       <div>До початку гри залишилось:</div>
       <div class="player-quest-page__start-time">{{ activeTime }}</div>
     </div>

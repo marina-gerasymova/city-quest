@@ -96,10 +96,12 @@ export default {
         }
       ],
       quest: null,
+      teams: null,
       questCountDown: 0,
       questTasks: [],
       readQuest: httpsCallable(getFunctions(getApp()), 'readQuest'),
       readQuestTasks: httpsCallable(getFunctions(getApp()), 'readQuestTasks'),
+      readQuestTeams: httpsCallable(getFunctions(getApp()), 'readQuestTeams'),
     }
   },
   computed: {
@@ -107,7 +109,7 @@ export default {
       return formatTime(this.questCountDown);
     },
     questPlayersNum() {
-      const teams = this.quest.teams;
+      const teams = this.teams;
 
       if (!teams) {
         return 0;
@@ -121,9 +123,14 @@ export default {
   async mounted() {
     const questCode = this.$route.params.code
     const result = await this.readQuest({ questCode });
-    const questTasks = await this.readQuestTasks({ questCode });
     this.quest = result.data.quest;
+    
+    const questTasks = await this.readQuestTasks({ questCode });
     this.questTasks = questTasks.data ? questTasks.data.tasks : [];
+    
+    const questTeams = await this.readQuestTeams({ questCode });
+    this.teams =  questTeams.data ? questTeams.data.teams : [];
+
     this.questCountDown = new Date(+this.quest.time) - Date.now();
 
     setInterval(() => {
