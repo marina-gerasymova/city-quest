@@ -123,7 +123,7 @@ export default {
     const result = await this.readQuest({ questCode });
     const questTasks = await this.readQuestTasks({ questCode });
     this.quest = result.data.quest;
-    this.questTasks = questTasks.data.tasks;
+    this.questTasks = questTasks.data ? questTasks.data.tasks : [];
     this.questCountDown = new Date(+this.quest.time) - Date.now();
 
     setInterval(() => {
