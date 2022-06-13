@@ -38,7 +38,7 @@
       <div class="quest-full-info__label">Завдання:</div>
       <div v-if="quest.tasks" class="quest-full-info__tasks-list">
         <Task
-          v-for="task in quest.tasks"
+          v-for="task in questTasks"
           :key="task.uid"
           :task="task"
         />
@@ -96,7 +96,9 @@ export default {
       ],
       quest: null,
       questCountDown: 0,
+      questTasks: [],
       readQuest: httpsCallable(getFunctions(getApp()), 'readQuest'),
+      readQuestTasks: httpsCallable(getFunctions(getApp()), 'readQuestTasks'),
     }
   },
   computed: {
@@ -109,7 +111,7 @@ export default {
       var minutes = Math.floor(delta / 60) % 60;
       delta -= minutes * 60;
       var seconds = Math.floor(delta % 60);
-      return `${days}:${hours}:${minutes}:${seconds}`;
+      return `${days} днів ${hours} години ${minutes} хв. ${seconds} с.`;
     },
     questPlayersNum() {
       const teams = this.quest.teams;
@@ -126,7 +128,9 @@ export default {
   async mounted() {
     const questCode = this.$route.params.code
     const result = await this.readQuest({ questCode });
+    const questTasks = await this.readQuestTasks({ questCode });
     this.quest = result.data.quest;
+    this.questTasks = questTasks.data.tasks;
     this.questCountDown = new Date(+this.quest.time) - Date.now();
 
     setInterval(() => {
