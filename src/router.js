@@ -68,7 +68,17 @@ const routes = [
     path: '/creating-task',
     name: 'creating-task',
     component: () => import('./views/CreatingTask.vue')
-  }
+  },
+  {
+    path: '/game',
+    name: 'game',
+    component: () => import('./views/Game.vue')
+  },
+  {
+    path: '/creating-team',
+    name: 'creating-team',
+    component: () => import('./views/CreatingTeam.vue')
+  },
 ]
 
 const router = new VueRouter({

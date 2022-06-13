@@ -70,3 +70,28 @@ Template to use text-input
     transform: translateY(-18px) scale(0.75); 
   }
 }
+
+.game-task {
+  .theme--light.v-text-field--outlined:not(.v-input--is-focused):not(.v-input--has-state) > .v-input__control > .v-input__slot fieldset {
+    color: $color-purple !important;
+  }
+
+  .theme--light.v-text-field--outlined:not(.v-input--is-focused):not(.v-input--has-state):not(.v-input--is-disabled) > .v-input__control > .v-input__slot:hover fieldset {
+    color: $color-purple !important;
+    background: $color-input-focus !important;
+  }
+
+  .v-input.cq-text-input.v-text-field {
+    .theme--light.v-label {
+      color: $color-purple !important;
+    }
+
+    & input {
+      color: $color-text-black; 
+    }
+  }
+  .v-input.cq-text-input.primary--text {
+    color: $color-purple !important;
+    caret-color: $color-purple !important; 
+  }
+}
