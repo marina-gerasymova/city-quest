@@ -34,11 +34,15 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/style/utils/mixins";
+@import "@/style/utils/colors";
 
 .footer {
   @include flex-between-center;
   width: 100%;
   height: 60px;
+  z-index: 2;
+  padding: 0 20px;
+  background: $color-app-background;
 
   &__arrow {
     cursor: pointer;

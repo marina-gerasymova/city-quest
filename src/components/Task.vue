@@ -6,9 +6,9 @@
     >
       <div class="task__number">Завдання №1</div>
       <div
-        class="task__arrow"
+        class="task__icon"
         :class="{
-          'task__arrow--bottom': open
+          'task__icon--bottom': open
         }"
       >
         <span class="material-symbols-outlined">
@@ -31,6 +31,14 @@
         <div class="task__sign">{{ row.label }}</div>
         <div class="task__answer">{{ row.key }}</div>
       </div>
+      <div class="task__editing">
+        <div class="task__answer">Редагувати квест</div>
+        <div class="task__icon">
+          <span class="material-symbols-outlined material-symbols-outlined--18">
+            edit
+          </span>
+        </div>
+    </div>
     </div>
   </div>
 </template>
