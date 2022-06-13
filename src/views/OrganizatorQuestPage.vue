@@ -162,7 +162,7 @@ export default {
       });
 
       const questTasks = await this.readQuestTasks({ questCode });
-      this.questTasks = questTasks.data.tasks;
+      this.questTasks = questTasks.data ? questTasks.data.tasks : [];
     }
   }
 }
