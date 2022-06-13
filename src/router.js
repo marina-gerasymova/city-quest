@@ -86,7 +86,7 @@ const routes = [
     component: () => import('./views/TaskEdit.vue')
   },
   {
-    path: '/game',
+    path: '/game/:code/:taskId',
     name: 'game',
     component: () => import('./views/Game.vue')
   },
