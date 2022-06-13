@@ -32,7 +32,7 @@
         <div class="task__answer">{{ task[row.key] }}</div>
       </div>
       <div class="task__editing">
-        <div class="task__answer">Редагувати квест</div>
+        <div @click="editTask" class="task__answer">Редагувати завдання</div>
         <div class="task__icon">
           <span class="material-symbols-outlined material-symbols-outlined--18">
             edit
@@ -74,6 +74,11 @@ export default {
           key: 'key',
         },
       ]
+    }
+  },
+  methods: {
+    editTask() {
+      this.$router.push(`/task-edit/${this.$route.params.code}/${this.task.uid}`);
     }
   }
 }

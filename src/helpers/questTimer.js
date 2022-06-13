@@ -8,5 +8,5 @@ export const formatTime = (questCountDown) => {
   delta -= minutes * 60;
   let seconds = Math.floor(delta % 60);
 
-  return `${days}:${hours}:${minutes}:${seconds}`;
+  return `${days} днів ${hours} години ${minutes} хв. ${seconds} с.`;
 }
