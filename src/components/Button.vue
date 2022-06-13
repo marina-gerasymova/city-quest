@@ -20,7 +20,7 @@ export default {
 
 .button {
   width: max-content;
-  padding: 10px 20px;
+  padding: 11px 20px;
   color: $color-text-blue;
   @include font-size-16px;
   font-weight: bold;

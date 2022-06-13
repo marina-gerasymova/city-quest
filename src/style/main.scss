@@ -59,6 +59,12 @@ div, label {
   color: #fff;
 }
 
+.task {
+  .material-symbols-outlined {
+    color: #222;
+  }
+}
+
 .page-size {
   @include flex-column-align-center;
   max-width: 500px;
