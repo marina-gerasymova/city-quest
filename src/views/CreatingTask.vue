@@ -1,8 +1,6 @@
 <template>
   <div class="creating-quest page-size">
-    <div
-      class="creating-quest__form"
-    >
+    <div class="creating-quest__form">
       <v-text-field
         class="cq-text-input"
         v-model="name"
@@ -89,11 +87,13 @@ export default {
   },
   methods: {
     async createTask() {
+      const hint = this.hint;
+      this.hint = '';
       const result = await this.faasCreateTask({
         questCode: this.$route.params.code,
         name: this.name,
         description: this.description,
-        hint: this.hint,
+        hint: hint,
         key: this.key.toUpperCase(),
         time: this.time,
         imgDataUrl: this.imageDataUrl

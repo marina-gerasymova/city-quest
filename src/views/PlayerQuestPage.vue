@@ -36,11 +36,15 @@
       Створити нову команду
     </Button>
   </div>
+  <div v-else class="page-size">
+    <Loader />
+  </div>
 </template>
 
 <script>
 import Button from "@/components/Button.vue";
 import Team from "@/components/Team.vue";
+import Loader from "@/components/Loader.vue";
 import { formatTime } from "@/helpers/questTimer.js";
 import { formatDate } from "@/helpers/formatData.js";
 import { getFunctions, httpsCallable } from "firebase/functions";
@@ -51,7 +55,8 @@ export default {
   name: 'PlayerQuestPage',
   components: {
     Team,
-    Button
+    Button,
+    Loader
   },
   data() {
     return {
