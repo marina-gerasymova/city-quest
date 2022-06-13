@@ -10,13 +10,15 @@
         outlined
         required
       ></v-text-field>
-      <v-text-field
+      <v-file-input
+        :rules="rules"
         class="cq-text-input"
-        v-model="maxCountOfTeams"
+        accept="image/png, image/jpeg, image/bmp"
+        placeholder="Pick an avatar"
+        prepend-icon="mdi-camera"
         label="Зображення"
         outlined
-        required
-      ></v-text-field>
+      ></v-file-input>
       <v-text-field
         class="cq-text-input"
         v-model="description"
