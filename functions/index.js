@@ -175,11 +175,11 @@ exports.readTask = functions.https.onCall((data) => {
   const db = Database.getDatabase();
   const dbRef = Database.ref(db);
 
-  return Database.get(Database.child(dbRef, `tasks/${questCode}`)).then((snapshot) => {
+  return Database.get(Database.child(dbRef, `tasks/${questCode}/${taskUid}`)).then((snapshot) => {
     if (snapshot.exists()) {
-      const tasks = snapshot.val();
+      const task = snapshot.val();
       return {
-        task: tasks[taskUid]
+        task
       }
     }
   }).catch((error) => {
@@ -292,6 +292,7 @@ exports.createTeam = functions.https.onCall((data) => {
   }
 
   const updates = {};
+  updates[`users/${user.userId}/team`] = newTeamKey;
   updates[`teams/${questCode}/${newTeamKey}`] = teamData;
   updates[`quests/${questCode}/teams/${newTeamKey}`] = teamData.createdAt;
 
@@ -397,13 +398,22 @@ exports.leaveTeam = functions.https.onCall((data) => {
 });
 
 exports.nextTaskTeam = functions.https.onCall((data) => {
-  const { questCode, teamUid, nextTaskId } = data;
+  const { questCode, teamUid, nextTaskId, progress, startTime } = data;
 
   const db = Database.getDatabase();
   const dbRef = Database.ref(db);
   
   const updates = {};
   updates[`teams/${questCode}/${teamUid}/currentTask`] = nextTaskId;
+  if (progress) {
+    updates[`teams/${questCode}/${teamUid}/progress`] = progress;
+  }
+  if (startTime) {
+    updates[`teams/${questCode}/${teamUid}/start`] = startTime;
+  }
+  if (progress == 1) {
+    updates[`teams/${questCode}/${teamUid}/end`] = Date.now();
+  }
 
   return Database.update(dbRef, updates);
 });
@@ -423,7 +433,7 @@ exports.submitTask = functions.https.onCall((data) => {
       const taskKey = snapshot.val();
 
       return {
-        next: taskKey === key
+        next: taskKey == key
       }
     }
   }).catch((error) => {

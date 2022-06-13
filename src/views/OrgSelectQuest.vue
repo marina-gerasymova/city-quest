@@ -44,7 +44,7 @@ export default {
   },
   async mounted() {
     const result = await this.faasGetUserQuests({ uid: this.uid });
-    this.quests = result.data?.quests || [];
+    this.quests = result?.data?.quests || [];
   },
   methods: {
     addNewGame() {

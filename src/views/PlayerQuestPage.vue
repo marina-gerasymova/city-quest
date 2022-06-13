@@ -5,8 +5,8 @@
       <div>До початку гри залишилось:</div>
       <div class="player-quest-page__start-time">{{ activeTime }}</div>
     </div>
+      <!-- v-if="questCountDown < 0" -->
     <Button
-      v-if="questCountDown < 0"
       class="button--start button--red"
       @button-click="startGame"
     >
@@ -32,6 +32,7 @@
           <Team
             class="player-quest-page__team"
             :team="team"
+            @team-update="updateTeams"
           />
         </div>
       </div>
@@ -56,6 +57,7 @@ import { formatTime } from "@/helpers/questTimer.js";
 import { formatDate } from "@/helpers/formatData.js";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { getApp } from 'firebase/app';
+import { mapGetters } from 'vuex';
 
 
 export default {
@@ -72,10 +74,16 @@ export default {
       questCountDown: 0,
       startTime: '',
       readQuest: httpsCallable(getFunctions(getApp()), 'readQuest'),
-      getTeamInfo: httpsCallable(getFunctions(getApp()), 'readQuestTeams'),
+      faasReadQuestTeams: httpsCallable(getFunctions(getApp()), 'readQuestTeams'),
+      faasReadUser: httpsCallable(getFunctions(getApp()), 'readUser'),
+      faasTeamToNextTask: httpsCallable(getFunctions(getApp()), 'nextTaskTeam'),
     }
   },
   computed: {
+    ...mapGetters({
+      tasksList: 'quest/tasksList',
+      uid: 'user/userUid'
+    }),
     activeTime() {
       return formatTime(this.questCountDown);
     }
@@ -85,6 +93,9 @@ export default {
     const result = await this.readQuest({ questCode });
     
     this.quest = result.data.quest;
+
+    this.$store.dispatch('quest/setActiveQuest', this.quest);
+
     this.startTime = formatDate(this.quest.time);
     this.questCountDown = +this.quest.time - Date.now();
     console.log(this.questCountDown);
@@ -96,7 +107,7 @@ export default {
         questCode: this.$route.params.code,
       }
 
-      const teamInfo = await this.getTeamInfo(payload)
+      const teamInfo = await this.faasReadQuestTeams(payload)
 
       if (!teamInfo.data) {
         this.teams = [];
@@ -123,8 +134,30 @@ export default {
     createNewTeam() {
       this.$router.push(`/creating-team/${this.$route.params.code}`);
     },
-    startGame() {
-      this.$router.push(`/game/${this.$route.params.code}/1`)
+    async updateTeams() {
+      const teamInfo = await this.faasReadQuestTeams({
+        questCode: this.$route.params.code
+      })
+
+      if (!teamInfo.data) {
+        this.teams = [];
+      } else {
+        this.teams = [teamInfo.data.teams].flat();
+      }
+    },
+    async startGame() {
+      const userData = await this.faasReadUser({ uid: this.uid });
+      if (userData.data?.user) {
+        const teamId = userData.data.user.team;
+        await this.faasTeamToNextTask({
+          questCode: this.$route.params.code,
+          teamUid: teamId,
+          nextTaskId: this.tasksList[0],
+          startTime: Date.now()
+        })
+
+        this.$router.push(`/game/${this.$route.params.code}/${teamId}`)
+      } 
     }
   }
 }

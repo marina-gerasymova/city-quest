@@ -86,9 +86,19 @@ const routes = [
     component: () => import('./views/TaskEdit.vue')
   },
   {
-    path: '/game/:code/:taskId',
+    path: '/game/:code/:teamId',
+    name: 'game-start',
+    component: () => import('./views/Game.vue')
+  },
+  {
+    path: '/game/:code/:teamId/:taskId',
     name: 'game',
     component: () => import('./views/Game.vue')
+  },
+  {
+    path: '/finish/:code/:teamId',
+    name: 'game',
+    component: () => import('./views/QuestEnd.vue')
   },
   {
     path: '/creating-team/:code',

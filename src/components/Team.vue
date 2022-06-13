@@ -92,7 +92,7 @@ export default {
         })
       }
 
-      await this.getTeamInfo();
+      this.$emit('team-update')
     }
   }
 }
