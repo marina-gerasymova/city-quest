@@ -378,10 +378,16 @@ exports.leaveTeam = functions.https.onCall((data) => {
     .then((playersArray) => {
       delete playersArray[userUid];
 
+      const newPlayers = Object.keys(playersArray).length;
+
       const updates = {};
       
       updates[`users/${userUid}/teamUid`] = "";
-      updates[`teams/${questCode}/${teamUid}/players`] = playersArray;
+      if (newPlayers) {
+        updates[`teams/${questCode}/${teamUid}/players`] = playersArray;
+      } else {
+        updates[`teams/${questCode}/${teamUid}`] = null;
+      }
 
       return Database.update(dbRef, updates);
     })
