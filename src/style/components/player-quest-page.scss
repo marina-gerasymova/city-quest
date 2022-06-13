@@ -9,6 +9,10 @@
     width: 100%;
   }
 
+  &__start-time {
+    margin-top: 10px;
+  }
+
   &__line {
     @include flex-between-center;
     @include font-size-14px;
@@ -25,5 +29,9 @@
     border-top: $border-white;
     margin: 10px 0;
     padding: 10px 0;
+  }
+
+  &__button {
+    margin-top: 10px;
   }
 }
