@@ -39,6 +39,16 @@ export default {
     opacity: 0.7;
   }
 
+  &--red {
+    background-color: #ff6666;
+    color: #fff;
+
+    &:hover {
+      background-color: #ff5555 !important;
+      // opacity: 0.7 !important;
+    }
+  }
+
   &:hover {
     background: $color-button-hover;
   }
