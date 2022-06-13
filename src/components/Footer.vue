@@ -2,7 +2,7 @@
   <div class="footer">
     <div
       class="footer__arrow"
-      @click="$emit('arrow-back-click')"
+      @click="prevPage"
     >
       <span class="material-symbols-outlined">
         arrow_back
@@ -27,6 +27,12 @@ export default {
   data() {
     return { 
       Logo
+    }
+  },
+  methods: {
+    prevPage() {
+      console.log(this.$router)
+      this.$router.go(-1);
     }
   }
 };

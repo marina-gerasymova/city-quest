@@ -196,6 +196,7 @@ exports.readQuestTasks = functions.https.onCall((data) => {
 
   return Database.get(Database.child(dbRef, `tasks/${questCode}`)).then((snapshot) => {
     if (snapshot.exists()) {
+      console.log(JSON.stringify(snapshot.val()));
       const tasks = Object.values(snapshot.val());
       return {
         tasks

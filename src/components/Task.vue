@@ -4,7 +4,7 @@
       class="task__title"
       @click="open = !open"
     >
-      <div class="task__number">Завдання №1</div>
+      <div class="task__number">{{ task.name }}</div>
       <div
         class="task__icon"
         :class="{
@@ -21,15 +21,15 @@
       class="task__content"
     >
       <div class="task__image">
-        
+        <img :src="task.imgUrl" alt="">
       </div>
       <div
         class="task__row"
-        v-for="row in task"
+        v-for="row in taskInfo"
         :key="row.label"
       >
         <div class="task__sign">{{ row.label }}</div>
-        <div class="task__answer">{{ row.key }}</div>
+        <div class="task__answer">{{ task[row.key] }}</div>
       </div>
       <div class="task__editing">
         <div class="task__answer">Редагувати квест</div>
@@ -47,25 +47,31 @@
 
 export default {
   name: 'Task',
+  props: {
+    task: {
+      type: Object,
+      required: true
+    }
+  },
   data() {
     return {
       open: false,
-      task: [
+      taskInfo: [
         {
           label: 'Завдання: ',
-          key: 'sdfghj',
+          key: 'description',
         },
         {
           label: 'Підказка: ',
-          key: 'asdfgh',
+          key: 'hint',
         },
         {
           label: 'Час на виконання: ',
-          key: 'asdfg',
+          key: 'time',
         },
         {
           label: 'Відповідь: ',
-          key: 'asdfg',
+          key: 'key',
         },
       ]
     }
