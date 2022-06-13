@@ -5,6 +5,15 @@
 .player-quest-page {
   color: $color-text-white;
 
+  &__title {
+    margin-bottom: 10px;
+  }
+
+  &__label {
+    @include font-size-14px;
+    margin: 20px 0 10px;
+  }
+
   &__info {
     width: 100%;
   }

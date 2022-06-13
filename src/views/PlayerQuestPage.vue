@@ -1,10 +1,17 @@
 <template>
   <div v-if="quest" class="page-size player-quest-page">
     <div class="player-quest-page__title title">
-      <div>{{ quest.name }}</div>
+      <div class="player-quest-page__title">{{ quest.name }}</div>
       <div>До початку гри залишилось:</div>
       <div class="player-quest-page__start-time">{{ activeTime }}</div>
     </div>
+    <Button
+      v-if="questCountDown < 0"
+      class="button--start button--red"
+      @button-click="startGame"
+    >
+      Старт
+    </Button>
     <div class="player-quest-page__info">
       <div class="player-quest-page__line">
         <div>Початок:</div>
@@ -16,12 +23,12 @@
       </div>
     </div>
     <div v-if="teams.length" class="player-quest-page__teams-wrapper">
+      <div class="player-quest-page__label">Приєднатися до команди:</div>
       <div
         v-for="team in teams"
         :key="team.uid"
       >
         <div class="player-quest-page__teams">
-          <div class="player-quest-page__title">Приєднатися до команди:</div>
           <Team
             class="player-quest-page__team"
             :team="team"
@@ -80,6 +87,7 @@ export default {
     this.quest = result.data.quest;
     this.startTime = formatDate(this.quest.time);
     this.questCountDown = +this.quest.time - Date.now();
+    console.log(this.questCountDown);
 
     console.log(this.quest.teamCap)
 
@@ -114,6 +122,9 @@ export default {
   methods: {
     createNewTeam() {
       this.$router.push(`/creating-team/${this.$route.params.code}`);
+    },
+    startGame() {
+      this.$router.push(`/game/${this.$route.params.code}/1`)
     }
   }
 }
@@ -132,6 +143,10 @@ export default {
 
   &-wrapper {
     width: 100%;
+  }
+
+  &--start {
+    margin: 50px auto;
   }
 }
 </style>
