@@ -31,14 +31,22 @@
         <div class="task__sign">{{ row.label }}</div>
         <div class="task__answer">{{ task[row.key] }}</div>
       </div>
-      <div class="task__editing">
-        <div @click="editTask" class="task__answer">Редагувати завдання</div>
+      <div class="task__editing" @click="editTask">
+        <div class="task__answer">Редагувати завдання</div>
         <div class="task__icon">
           <span class="material-symbols-outlined material-symbols-outlined--18">
             edit
           </span>
         </div>
-    </div>
+      </div>
+      <div class="task__editing" @click="deleteTask">
+        <div class="task__answer">Видалити завдання</div>
+        <div class="task__icon">
+          <span class="material-symbols-outlined material-symbols-outlined--18">
+            delete
+          </span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -79,6 +87,9 @@ export default {
   methods: {
     editTask() {
       this.$router.push(`/task-edit/${this.$route.params.code}/${this.task.uid}`);
+    },
+    deleteTask() {
+      this.$emit('delete-task');
     }
   }
 }

@@ -43,6 +43,8 @@ export default {
 @import "@/style/utils/colors";
 
 .footer {
+  position: absolute;
+  bottom: 0;
   @include flex-between-center;
   width: 100%;
   height: 60px;
