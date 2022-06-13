@@ -24,6 +24,23 @@ exports.helloWorld = functions.https.onRequest((request, response) => {
   response.send("Hello from Firebase, deployed with GH Actions!");
 });
 
+exports.readUser = functions.https.onCall((data) => {
+  const { uid } = data;
+
+  const db = Database.getDatabase();
+  const dbRef = Database.ref(db);
+
+  return Database.get(Database.child(dbRef, `users/${uid}`)).then((snapshot) => {
+    if (snapshot.exists()) {
+      return {
+        user: snapshot.val()
+      }
+    }
+  }).catch((error) => {
+    console.error(error);
+  });
+});
+
 /**
  * QUESTS CRUD
  */
@@ -251,7 +268,7 @@ exports.deleteTask = functions.https.onCall((data) => {
  */
 
 exports.createTeam = functions.https.onCall((data) => {
-  const { userId, questCode, name } = data;
+  const { user, questCode, name } = data;
 
   const db = Database.getDatabase();
   const dbRef = Database.ref(db);
@@ -262,7 +279,9 @@ exports.createTeam = functions.https.onCall((data) => {
     name,
     uid: newTeamKey,
     currentTask: "",
-    players: [ userId ],
+    players: {
+      [user.userId]: user
+    },
     createdAt: Date.now()
   }
 
@@ -283,17 +302,8 @@ exports.readQuestTeams = functions.https.onCall((data) => {
     if (snapshot.exists()) {
       const teams = Object.values(snapshot.val());
 
-      const parsedTeams = teams.map(team => {
-        return {
-          ...team,
-          players: team.players.map(async (playerId) => {
-            return await Database.get(Database.child(dbRef, `users/${playerId}`)).then(data => data.val().name);
-          })
-        };
-      });
-
       return {
-        teams: parsedTeams
+        teams
       };
     }
   }).catch((error) => {
@@ -311,19 +321,8 @@ exports.getTeamInfo = functions.https.onCall((data) => {
     .then((snapshot) => {
       if (snapshot.exists()) {
         const team = snapshot.val();
-        const players = team.players.map(async (playerId) => {
-          return await Database.get(Database.child(dbRef, `users/${playerId}`))
-            .then((shot) => {
-              if (shot.exists()) {
-                return {
-                  name: shot.val().name
-                }
-              }
-            })
-        });
         return {
-          ...team,
-          players
+          team
         };
       }
     }).catch((error) => {
@@ -332,7 +331,7 @@ exports.getTeamInfo = functions.https.onCall((data) => {
 });
 
 exports.joinTeam = functions.https.onCall((data) => {
-  const { teamUid, questCode, userUid } = data;
+  const { teamUid, questCode, user } = data;
 
   const db = Database.getDatabase();
   const dbRef = Database.ref(db);
@@ -344,10 +343,12 @@ exports.joinTeam = functions.https.onCall((data) => {
       }
     })
     .then((playersArray) => {
-      playersArray.push(userUid);
+      const playersObj = playersArray || {};
+      playersObj[user.userId] = user;
 
       const updates = {};
-      updates[`teams/${questCode}/${teamUid}/players`] = playersArray;
+      updates[`users/${user.userId}/team`] = teamUid;
+      updates[`teams/${questCode}/${teamUid}/players`] = playersObj;
 
       return Database.update(dbRef, updates);
     })
@@ -369,9 +370,11 @@ exports.leaveTeam = functions.https.onCall((data) => {
       }
     })
     .then((playersArray) => {
-      playersArray.filter(uid => uid !== userUid);
+      delete playersArray[userUid];
 
       const updates = {};
+      
+      updates[`users/${userUid}/teamUid`] = "";
       updates[`teams/${questCode}/${teamUid}/players`] = playersArray;
 
       return Database.update(dbRef, updates);

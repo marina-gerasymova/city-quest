@@ -23,6 +23,9 @@
 
 <script>
 import Button from "@/components/Button.vue";
+import { getFunctions, httpsCallable } from "firebase/functions";
+import { getApp } from 'firebase/app';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'CreatingTeam',
@@ -32,13 +35,31 @@ export default {
   data() {
     return {
       teamName: '',
+      faasCreateTeam: httpsCallable(getFunctions(getApp()), 'createTeam'),
+      faasReadUser: httpsCallable(getFunctions(getApp()), 'readUser'),
     }
+  },
+  computed: {
+    ...mapGetters({
+      uid: 'user/userUid'
+    })
   },
   methods: {
     createNewTeam() {
       if(this.teamName) {
-        this.$router.push('/player-quest-page');
+        this.createTeam();
       }
+    },
+    async createTeam() {
+      const userData = await this.faasReadUser({ uid: this.uid });
+      const payload = {
+        user: userData.data.user,
+        questCode: this.$route.params.code,
+        name: this.teamName
+      }
+
+      await this.faasCreateTeam(payload);
+      this.$router.push(`/player-quest-page/${this.$route.params.code}`);
     }
   }
 }

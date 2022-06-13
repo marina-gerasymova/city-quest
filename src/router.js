@@ -79,8 +79,9 @@ const routes = [
     component: () => import('./views/Game.vue')
   },
   {
-    path: '/creating-team',
+    path: '/creating-team/:code',
     name: 'creating-team',
+    meta: { auth: true },
     component: () => import('./views/CreatingTeam.vue')
   },
 ]

@@ -14,13 +14,26 @@
         <div>{{ quest.address }}</div>
       </div>
     </div>
-    <div v-if="quest.teams">
-      <div class="player-quest-page__teams">
-        <div class="player-quest-page__title">Приєднатися до команди:</div>
-        <Team class="player-quest-page__team" />
+    <div v-if="teams.length" class="player-quest-page__teams-wrapper">
+      <div
+        v-for="team in teams"
+        :key="team.uid"
+      >
+        <div class="player-quest-page__teams">
+          <div class="player-quest-page__title">Приєднатися до команди:</div>
+          <Team
+            class="player-quest-page__team"
+            :team="team"
+          />
+        </div>
       </div>
     </div>
-    <Button class="player-quest-page__button">Створити нову команду</Button>
+    <Button
+      class="player-quest-page__button"
+      @button-click="createNewTeam"
+    >
+      Створити нову команду
+    </Button>
   </div>
 </template>
 
@@ -41,10 +54,12 @@ export default {
   },
   data() {
     return {
+      teams: [],
       quest: null,
       questCountDown: 0,
       startTime: '',
       readQuest: httpsCallable(getFunctions(getApp()), 'readQuest'),
+      getTeamInfo: httpsCallable(getFunctions(getApp()), 'readQuestTeams'),
     }
   },
   computed: {
@@ -55,11 +70,33 @@ export default {
   async mounted() {
     const questCode = this.$route.params.code
     const result = await this.readQuest({ questCode });
-    console.log(result)
+    
     this.quest = result.data.quest;
     this.startTime = formatDate(this.quest.time);
-    console.log(this.startTime)
     this.questCountDown = +this.quest.time - Date.now();
+
+    console.log(this.quest.teamCap)
+
+    if(this.quest.teamCap) {
+      const payload = {
+        questCode: this.$route.params.code,
+      }
+
+      const teamInfo = await this.getTeamInfo(payload)
+
+      if (!teamInfo.data) {
+        this.teams = [];
+      } else {
+        this.teams = [teamInfo.data.teams].flat();
+      }
+
+      console.log(teamInfo)
+      console.log('TEAM', this.teams)
+    }
+    
+    console.log(this.teams)
+    console.log(result)
+    console.log(this.startTime)
 
     setInterval(() => {
       if (this.questCountDown > 0) {
@@ -69,6 +106,9 @@ export default {
     console.log(this.quest.time)
   },
   methods: {
+    createNewTeam() {
+      this.$router.push(`/creating-team/${this.$route.params.code}`);
+    }
   }
 }
 </script>
