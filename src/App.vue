@@ -1,15 +1,22 @@
 <template>
   <v-app class="app">
-    <router-view />
+    <div class="app__main">
+      <router-view />
+    </div>
+    <Footer />
   </v-app>
 </template>
 
 <script>
 import { getStorage } from "firebase/storage";
 import { getApp } from 'firebase/app';
+import Footer from '@/components/Footer.vue';
 
 export default {
   name: 'App',
+  components: {
+    Footer,
+  },
   mounted() {
     const app = getApp();
     const storage = getStorage(app);

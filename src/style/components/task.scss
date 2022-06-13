@@ -10,12 +10,12 @@
   background: $color-text-white;
   border-radius: $border-radius;
 
-  &__title {
+  &__title, &__editing {
     @include flex-between-center;
     cursor: pointer;
   }
 
-  &__arrow {
+  &__icon  {
     height: 24px;
     transition: transform ease 0.3s;
 
@@ -40,5 +40,15 @@
   &__row {
     display: flex;
     margin-bottom: 10px;
+  }
+
+  &__editing {
+    padding-top: 10px;
+    border-top: 1px solid $color-purple;
+
+    .task__icon {
+      width: 18px;
+      height: 18px;
+    }
   }
 }

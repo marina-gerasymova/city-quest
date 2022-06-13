@@ -100,3 +100,7 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+@import "@/style/login.scss";
+</style>
