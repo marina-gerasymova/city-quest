@@ -12,7 +12,7 @@
       <div class="button-wrapper">
         <Button
           class="button"
-          @click="addNewGame"
+          @button-click="addNewGame"
         >
           Доєднатися
         </Button>
@@ -23,13 +23,38 @@
 
 <script>
 import Button from "@/components/Button.vue";
+import { getFunctions, httpsCallable } from "firebase/functions";
+import { getApp } from 'firebase/app';
 
 export default {
   name: 'QuestCode',
   components: {
     Button
   },
+  data() {
+    return {
+      code: '',
+      faasReadQuest: httpsCallable(getFunctions(getApp()), 'readQuest'),
+    }
+  },
   methods: {
+    async addNewGame() {
+      if(this.code) {
+        console.log('click');
+        const result = await this.faasReadQuest({ questCode: this.code.toUpperCase() });
+        console.log(result)
+
+        if (!result.data) {
+          alert('Квест не знайдено');
+          this.code = '';
+          this.$store.dispatch('quest/setActiveQuest', null);
+          return;
+        }
+
+        this.$store.dispatch('quest/setActiveQuest', result.data.quest);
+        this.$router.push(`/player-quest-page/${result.data.quest.code}`);
+      }
+    }
   }
 }
 </script>

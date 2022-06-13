@@ -50,7 +50,7 @@ const routes = [
     component: () => import('./views/QuestCode.vue')
   },
   {
-    path: '/player-quest-page',
+    path: '/player-quest-page/:code',
     name: 'player-quest-page',
     meta: { auth: true },
     component: () => import('./views/PlayerQuestPage.vue')
